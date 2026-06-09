@@ -1,0 +1,16 @@
+---
+// src/components/ui/card-footer.astro
+import { cn } from "../../lib/utils"
+
+interface Props {
+  class?: string
+  [key: string]: any
+}
+
+const { class: className, ...rest } = Astro.props
+const classList = cn("flex items-center p-6 pt-0", className)
+---
+
+<div class={classList} {...rest}>
+  <slot />
+</div>

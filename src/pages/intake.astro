@@ -1,0 +1,217 @@
+---
+// src/pages/intake.astro
+import Layout from "../layouts/Layout.astro"
+import { cn } from "../lib/utils"
+import Button from "../components/ui/button.astro"
+import Input from "../components/ui/input.astro"
+import Label from "../components/ui/label.astro"
+import Textarea from "../components/ui/textarea.astro"
+import Card from "../components/ui/card.astro"
+import CardHeader from "../components/ui/card-header.astro"
+import CardTitle from "../components/ui/card-title.astro"
+import CardDescription from "../components/ui/card-description.astro"
+import CardContent from "../components/ui/card-content.astro"
+import Checkbox from "../components/ui/checkbox.astro"
+---
+
+<Layout title="Project Intake — vibe-collectives" description="Add a new project to the vibe-collectives collection">
+  <div class="max-w-3xl mx-auto">
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Project Intake Sheet</h1>
+      <p class="text-lg text-muted-foreground">Fill out to add a new project to vibe-collectives</p>
+    </header>
+    
+    <Card>
+      <CardHeader>
+        <CardTitle>Project Details</CardTitle>
+        <CardDescription>Required fields marked with *</CardDescription>
+      </CardHeader>
+      <CardContent class="pt-0">
+        <form id="intake-form" class="space-y-6">
+          <div class="space-y-2">
+            <Label htmlFor="title" class="flex items-center gap-1">Project Title *</Label>
+            <Input id="title" required placeholder="vibe-collectives web endpoint" />
+          </div>
+          
+          <div class="space-y-2">
+            <Label htmlFor="description" class="flex items-center gap-1">Description *</Label>
+            <Textarea id="description" required rows={3} placeholder="One-paragraph summary..." />
+          </div>
+          
+          <div class="grid gap-4 md:grid-cols-2">
+            <div class="space-y-2">
+              <Label htmlFor="publishDate" class="flex items-center gap-1">Publish Date *</Label>
+              <Input id="publishDate" type="date" required />
+            </div>
+            <div class="space-y-2">
+              <Label htmlFor="status" class="flex items-center gap-1">Status</Label>
+              <select id="status" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="space-y-2">
+            <Label htmlFor="tags" class="flex items-center gap-1">Tags (comma-separated)</Label>
+            <Input id="tags" placeholder="astro, github-pages, webbers" />
+          </div>
+          
+          <div class="space-y-2">
+            <Label htmlFor="links" class="flex items-center gap-1">Links (JSON)</Label>
+            <Textarea 
+              id="links" 
+              rows={4} 
+              placeholder='{"github": "https://...", "demo": "https://...", "article": "https://..."}' 
+            />
+          </div>
+          
+          <fieldset class="space-y-2 border-t pt-6">
+            <legend class="font-medium">Notification Channels</legend>
+            <div class="flex flex-wrap gap-6">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <Checkbox id="notify-email" checked /> Email
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <Checkbox id="notify-discord" /> Discord
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <Checkbox id="notify-dm" /> Direct Message
+              </label>
+            </div>
+            <p class="text-xs text-muted-foreground">Configure which notification options appear on the project page</p>
+          </fieldset>
+          
+          <div class="space-y-2 border-t pt-6">
+            <Label htmlFor="content" class="flex items-center gap-1">Content (Markdown/MDX)</Label>
+            <Textarea id="content" rows={15} placeholder="Write your project content here..." />
+          </div>
+          
+          <div class="flex flex-wrap gap-4 border-t pt-6">
+            <Button type="button" id="generate-mdx" variant="outline">
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              Generate .mdx
+            </Button>
+            <Button type="button" id="copy-mdx" variant="outline">
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+              </svg>
+              Copy to Clipboard
+            </Button>
+          </div>
+        </form>
+        
+        <div id="output" class="hidden mt-6 space-y-4">
+          <div class="flex items-center gap-2">
+            <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <h3 class="text-lg font-semibold">Generated Frontmatter + Content</h3>
+          </div>
+          <pre id="mdx-output" class="bg-muted p-4 rounded-md overflow-x-auto text-sm max-h-96 whitespace-pre-wrap"></pre>
+          <Button id="download-mdx" class="w-full">
+            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Download .mdx File
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+    
+    <div class="mt-8 p-4 bg-muted/50 rounded-lg">
+      <h3 class="font-semibold mb-2">Next Steps</h3>
+      <ol class="space-y-1 text-sm text-muted-foreground list-decimal list-inside">
+        <li>Click "Generate .mdx" to preview the generated file</li>
+        <li>Click "Download .mdx File" to save it locally</li>
+        <li>Place the file in <code class="bg-background px-1.5 rounded">src/content/projects/</code></li>
+        <li>Run <code class="bg-background px-1.5 rounded">pnpm build</code> to verify</li>
+        <li>Push to git — GitHub Actions will deploy automatically</li>
+      </ol>
+    </div>
+  </div>
+
+<script>
+  const form = document.getElementById("intake-form")
+  const output = document.getElementById("output")
+  const mdxOutput = document.getElementById("mdx-output")
+  const generateBtn = document.getElementById("generate-mdx")
+  const copyBtn = document.getElementById("copy-mdx")
+  const downloadBtn = document.getElementById("download-mdx")
+  
+  function generateMDX() {
+    const title = (document.getElementById("title") as HTMLInputElement).value
+    const description = (document.getElementById("description") as HTMLTextAreaElement).value
+    const publishDate = (document.getElementById("publishDate") as HTMLInputElement).value
+    const status = (document.getElementById("status") as HTMLSelectElement).value
+    const tags = (document.getElementById("tags") as HTMLInputElement).value.split(",").map(t => t.trim()).filter(Boolean)
+    const linksRaw = (document.getElementById("links") as HTMLTextAreaElement).value
+    const notifyEmail = (document.getElementById("notify-email") as HTMLInputElement).checked
+    const notifyDiscord = (document.getElementById("notify-discord") as HTMLInputElement).checked
+    const notifyDM = (document.getElementById("notify-dm") as HTMLInputElement).checked
+    const content = (document.getElementById("content") as HTMLTextAreaElement).value
+    
+    let links = {}
+    try { links = JSON.parse(linksRaw) } catch {}
+    
+    const frontmatter: Record<string, any> = {
+      title,
+      description,
+      publishDate,
+      updatedDate: publishDate,
+      tags,
+      status,
+      featured: false,
+      notifications: { email: notifyEmail, discord: notifyDiscord, dm: notifyDM },
+    }
+    
+    if (Object.keys(links).length > 0) {
+      frontmatter.links = links
+    }
+    
+    const yaml = Object.entries(frontmatter)
+      .map(([k, v]) => {
+        if (Array.isArray(v)) return `${k}: [${v.map(s => `"${s}"`).join(", ")}]`
+        if (typeof v === "object" && v !== null) return `${k}: ${JSON.stringify(v, null, 2).replace(/\n/g, "\n  ")}`
+        if (typeof v === "string" && (v.includes(":") || v.includes("#"))) return `${k}: "${v}"`
+        return `${k}: ${v}`
+      })
+      .join("\n")
+    
+    return `---\n${yaml}\n---\n\n${content}`
+  }
+  
+  generateBtn?.addEventListener("click", () => {
+    const mdx = generateMDX()
+    mdxOutput.textContent = mdx
+    output.classList.remove("hidden")
+  })
+  
+  copyBtn?.addEventListener("click", async () => {
+    const mdx = generateMDX()
+    await navigator.clipboard.writeText(mdx)
+    const originalHTML = copyBtn.innerHTML
+    copyBtn.innerHTML = `<svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!`
+    setTimeout(() => copyBtn.innerHTML = originalHTML, 2000)
+  })
+  
+  downloadBtn?.addEventListener("click", () => {
+    const mdx = generateMDX()
+    const title = (document.getElementById("title") as HTMLInputElement).value
+    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")
+    const blob = new Blob([mdx], { type: "text/markdown" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `${slug}.mdx`
+    a.click()
+    URL.revokeObjectURL(url)
+  })
+  
+  // Set default date to today
+  const today = new Date().toISOString().split("T")[0]
+  ;(document.getElementById("publishDate") as HTMLInputElement).value = today
+</script>

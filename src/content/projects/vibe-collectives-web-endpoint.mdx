@@ -1,0 +1,49 @@
+---
+title: "vibe-collectives web endpoint"
+description: "GitHub Pages site for transmitting our corpus to communities"
+publishDate: 2026-06-09
+updatedDate: 2026-06-09
+tags: ["astro", "github-pages", "webbers"]
+status: "published"
+featured: true
+links:
+  github: "https://github.com/kbhir/webpage-vibe-collectives"
+notifications:
+  email: true
+  discord: true
+  dm: true
+---
+
+This is the meta-project for the vibe-collectives website itself — a GitHub Pages site built with Astro 5, Tailwind CSS, and shadcn/ui components.
+
+## Features
+
+- **Content Collections**: Projects managed as MDX files with full frontmatter schema
+- **Interactive Islands**: Notification signup forms (email, Discord, DM) using Astro's island architecture
+- **Intake Workflow**: Built-in `/intake` page for adding new projects with automatic MDX generation
+- **Static Export**: Optimized for GitHub Pages deployment via GitHub Actions
+- **Design System**: Tailwind CSS with shadcn/ui compatible components
+
+## Tech Stack
+
+- Astro 5 (static output)
+- Tailwind CSS 3.4
+- shadcn/ui patterns (Astro-native)
+- TypeScript strict mode
+- Biome (lint + format)
+- MDX for content
+
+## Local Development
+
+```bash
+pnpm install
+pnpm dev
+```
+
+## Adding New Projects
+
+Visit `/intake` on the dev server, fill out the form, generate the MDX file, and place it in `src/content/projects/`.
+
+## Deployment
+
+Push to `main` → GitHub Actions builds and deploys to GitHub Pages automatically.

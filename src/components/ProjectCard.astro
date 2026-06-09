@@ -1,0 +1,60 @@
+---
+// src/components/ProjectCard.astro
+import { cn } from "../lib/utils"
+import Card from "./ui/card.astro"
+import CardHeader from "./ui/card-header.astro"
+import CardTitle from "./ui/card-title.astro"
+import CardDescription from "./ui/card-description.astro"
+import CardContent from "./ui/card-content.astro"
+import CardFooter from "./ui/card-footer.astro"
+import Button from "./ui/button.astro"
+
+interface Props {
+  project: any
+}
+
+const { project } = Astro.props
+const { data, slug } = project
+const pubDate = new Date(data.publishDate).toLocaleDateString()
+const tagColors: Record<string, string> = {
+  astro: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
+  "github-pages": "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+  webbers: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200",
+  default: "bg-secondary text-secondary-foreground",
+}
+---
+
+<Card class="group hover:border-primary/50 transition-colors h-full flex flex-col">
+  <CardHeader>
+    <div class="flex items-start justify-between gap-2 mb-2">
+      <CardTitle class="text-lg line-clamp-1">{data.title}</CardTitle>
+      {data.featured && (
+        <span class="flex-shrink-0 px-1.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+          Featured
+        </span>
+      )}
+    </div>
+    <CardDescription class="text-base">{data.description}</CardDescription>
+  </CardHeader>
+  <CardContent class="flex-1">
+    <div class="flex flex-wrap gap-1.5 mb-4">
+      {data.tags.map((tag: string) => (
+        <span
+          key={tag}
+          class={cn(
+            "px-2 py-0.5 text-xs font-medium rounded-full",
+            tagColors[tag.toLowerCase()] || tagColors.default
+          )}
+        >
+          {tag}
+        </span>
+      ))}
+    </div>
+    <time class="text-xs text-muted-foreground">Published {pubDate}</time>
+  </CardContent>
+  <CardFooter class="pt-0">
+    <Button variant="outline" class="w-full" asChild>
+      <a href={`/projects/${slug}/`}>View Project →</a>
+    </Button>
+  </CardFooter>
+</Card>

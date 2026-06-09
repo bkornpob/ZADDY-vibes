@@ -1,0 +1,80 @@
+---
+// src/pages/projects/[slug].astro
+import { getCollection, getEntryBySlug } from "astro:content"
+import Layout from "../../layouts/Layout.astro"
+import NotificationSignup from "../../components/NotificationSignup.astro"
+import Card from "../../components/ui/card.astro"
+import CardContent from "../../components/ui/card-content.astro"
+import Button from "../../components/ui/button.astro"
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects")
+  return projects
+    .filter(p => p.data.status === "published")
+    .map(project => ({
+      params: { slug: project.slug },
+      props: { project },
+    }))
+}
+
+const { project } = Astro.props
+const { Content } = await project.render()
+const { data, slug } = project
+const pubDate = new Date(data.publishDate).toLocaleDateString()
+const updatedDate = data.updatedDate ? new Date(data.updatedDate).toLocaleDateString() : null
+---
+
+<Layout title={data.title} description={data.description}>
+  <article class="max-w-4xl mx-auto">
+    <header class="mb-8">
+      <div class="flex flex-wrap gap-2 mb-4">
+        {data.tags.map((tag: string) => (
+          <span key={tag} class="px-2 py-1 text-xs bg-secondary rounded-full">{tag}</span>
+        ))}
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold mb-4">{data.title}</h1>
+      <p class="text-lg text-muted-foreground mb-4">{data.description}</p>
+      <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+        <time>Published: {pubDate}</time>
+        {updatedDate && <time>Updated: {updatedDate}</time>}
+        {data.featured && <span class="px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">Featured</span>}
+      </div>
+    </header>
+    
+    <div class="prose prose-lg dark:prose-invert mb-12 max-w-none">
+      <Content />
+    </div>
+    
+    {data.links && (
+      <Card class="mb-8">
+        <CardContent class="pt-6">
+          <h3 class="text-lg font-semibold mb-4">Links</h3>
+          <div class="flex flex-wrap gap-4">
+            {data.links.github && (
+              <Button variant="outline" asChild>
+                <a href={data.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+              </Button>
+            )}
+            {data.links.demo && (
+              <Button variant="outline" asChild>
+                <a href={data.links.demo} target="_blank" rel="noopener noreferrer">Live Demo</a>
+              </Button>
+            )}
+            {data.links.article && (
+              <Button variant="outline" asChild>
+                <a href={data.links.article} target="_blank" rel="noopener noreferrer">Article</a>
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    )}
+    
+    <NotificationSignup
+      projectSlug={slug}
+      emailEnabled={data.notifications?.email ?? true}
+      discordEnabled={data.notifications?.discord ?? false}
+      dmEnabled={data.notifications?.dm ?? false}
+    />
+  </article>
+</Layout>

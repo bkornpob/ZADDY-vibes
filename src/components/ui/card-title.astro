@@ -1,0 +1,16 @@
+---
+// src/components/ui/card-title.astro
+import { cn } from "../../lib/utils"
+
+interface Props {
+  class?: string
+  [key: string]: any
+}
+
+const { class: className, ...rest } = Astro.props
+const classList = cn("text-2xl font-semibold leading-none tracking-tight", className)
+---
+
+<h3 class={classList} {...rest}>
+  <slot />
+</h3>
