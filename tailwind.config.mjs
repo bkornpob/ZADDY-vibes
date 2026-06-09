@@ -1,8 +1,7 @@
-import type { Config } from "tailwindcss"
-import typography from "@tailwindcss/typography"
-import forms from "@tailwindcss/forms"
+import forms from "@tailwindcss/forms";
+import typography from "@tailwindcss/typography";
 
-const config: Config = {
+const config = {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
@@ -41,5 +40,5 @@ const config: Config = {
     },
   },
   plugins: [typography, forms],
-}
-export default config
+};
+export default config;

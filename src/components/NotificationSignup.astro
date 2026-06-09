@@ -1,21 +1,26 @@
 ---
 // src/components/NotificationSignup.astro
-import { cn } from "../lib/utils"
-import Button from "./ui/button.astro"
-import Input from "./ui/input.astro"
-import Label from "./ui/label.astro"
-import Card from "./ui/card.astro"
-import CardContent from "./ui/card-content.astro"
-import Checkbox from "./ui/checkbox.astro"
+import { cn } from "../lib/utils";
+import Button from "./ui/button.astro";
+import CardContent from "./ui/card-content.astro";
+import Card from "./ui/card.astro";
+import Checkbox from "./ui/checkbox.astro";
+import Input from "./ui/input.astro";
+import Label from "./ui/label.astro";
 
 interface Props {
-  projectSlug: string
-  emailEnabled?: boolean
-  discordEnabled?: boolean
-  dmEnabled?: boolean
+  projectSlug: string;
+  emailEnabled?: boolean;
+  discordEnabled?: boolean;
+  dmEnabled?: boolean;
 }
 
-const { projectSlug, emailEnabled = true, discordEnabled = false, dmEnabled = false } = Astro.props
+const {
+  projectSlug,
+  emailEnabled = true,
+  discordEnabled = false,
+  dmEnabled = false,
+} = Astro.props;
 ---
 
 <Card class="border-border/50 mt-8">

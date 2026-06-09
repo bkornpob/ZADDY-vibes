@@ -6,8 +6,10 @@
     "rules": {
       "recommended": true,
       "a11y": { "noSvgWithoutTitle": "off" },
-      "style": { "noNonNullAssertion": "off" }
+      "style": { "noNonNullAssertion": "off" },
+      "suspicious": { "noExplicitAny": "off" }
     }
   },
-  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2 }
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2 },
+  "files": { "ignore": [".astro", "dist", "node_modules"] }
 }

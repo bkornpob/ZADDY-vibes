@@ -1,14 +1,17 @@
 ---
 // src/components/ui/label.astro
-import { cn } from "../../lib/utils"
+import { cn } from "../../lib/utils";
 
 interface Props {
-  class?: string
-  [key: string]: any
+  class?: string;
+  [key: string]: any;
 }
 
-const { class: className, ...rest } = Astro.props
-const classList = cn("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", className)
+const { class: className, ...rest } = Astro.props;
+const classList = cn(
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+  className,
+);
 ---
 
 <label class={classList} {...rest}>

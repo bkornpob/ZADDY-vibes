@@ -1,27 +1,29 @@
 ---
 // src/components/ProjectCard.astro
-import { cn } from "../lib/utils"
-import Card from "./ui/card.astro"
-import CardHeader from "./ui/card-header.astro"
-import CardTitle from "./ui/card-title.astro"
-import CardDescription from "./ui/card-description.astro"
-import CardContent from "./ui/card-content.astro"
-import CardFooter from "./ui/card-footer.astro"
-import Button from "./ui/button.astro"
+import { cn } from "../lib/utils";
+import Button from "./ui/button.astro";
+import CardContent from "./ui/card-content.astro";
+import CardDescription from "./ui/card-description.astro";
+import CardFooter from "./ui/card-footer.astro";
+import CardHeader from "./ui/card-header.astro";
+import CardTitle from "./ui/card-title.astro";
+import Card from "./ui/card.astro";
 
 interface Props {
-  project: any
+  project: any;
 }
 
-const { project } = Astro.props
-const { data, slug } = project
-const pubDate = new Date(data.publishDate).toLocaleDateString()
+const { project } = Astro.props;
+const { data, slug } = project;
+const pubDate = new Date(data.publishDate).toLocaleDateString();
 const tagColors: Record<string, string> = {
-  astro: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-  "github-pages": "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+  astro:
+    "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
+  "github-pages":
+    "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
   webbers: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200",
   default: "bg-secondary text-secondary-foreground",
-}
+};
 ---
 
 <Card class="group hover:border-primary/50 transition-colors h-full flex flex-col">

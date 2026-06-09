@@ -1,12 +1,12 @@
 ---
+import { getCollection } from "astro:content";
+import ProjectCard from "../../components/ProjectCard.astro";
 // src/pages/projects/index.astro
-import Layout from "../../layouts/Layout.astro"
-import { getCollection } from "astro:content"
-import ProjectCard from "../../components/ProjectCard.astro"
+import Layout from "../../layouts/Layout.astro";
 
 const projects = (await getCollection("projects"))
-  .filter(p => p.data.status === "published")
-  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .filter((p) => p.data.status === "published")
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 ---
 
 <Layout title="All Projects — vibe-collectives" description="All published projects in the vibe-collectives collection">

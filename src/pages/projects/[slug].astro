@@ -1,27 +1,29 @@
 ---
 // src/pages/projects/[slug].astro
-import { getCollection, getEntryBySlug } from "astro:content"
-import Layout from "../../layouts/Layout.astro"
-import NotificationSignup from "../../components/NotificationSignup.astro"
-import Card from "../../components/ui/card.astro"
-import CardContent from "../../components/ui/card-content.astro"
-import Button from "../../components/ui/button.astro"
+import { getCollection, getEntryBySlug } from "astro:content";
+import NotificationSignup from "../../components/NotificationSignup.astro";
+import Button from "../../components/ui/button.astro";
+import CardContent from "../../components/ui/card-content.astro";
+import Card from "../../components/ui/card.astro";
+import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
-  const projects = await getCollection("projects")
+  const projects = await getCollection("projects");
   return projects
-    .filter(p => p.data.status === "published")
-    .map(project => ({
+    .filter((p) => p.data.status === "published")
+    .map((project) => ({
       params: { slug: project.slug },
       props: { project },
-    }))
+    }));
 }
 
-const { project } = Astro.props
-const { Content } = await project.render()
-const { data, slug } = project
-const pubDate = new Date(data.publishDate).toLocaleDateString()
-const updatedDate = data.updatedDate ? new Date(data.updatedDate).toLocaleDateString() : null
+const { project } = Astro.props;
+const { Content } = await project.render();
+const { data, slug } = project;
+const pubDate = new Date(data.publishDate).toLocaleDateString();
+const updatedDate = data.updatedDate
+  ? new Date(data.updatedDate).toLocaleDateString()
+  : null;
 ---
 
 <Layout title={data.title} description={data.description}>
